@@ -1,6 +1,6 @@
 ﻿namespace Order.Domain.Models
 {
-    public class UserModel
+    public class UserModel : EntityBase
     {
         public string Name { get; set; } = string.Empty;
 
