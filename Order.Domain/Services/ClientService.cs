@@ -1,6 +1,8 @@
 ﻿using Order.Domain.Interfaces.Repositories;
 using Order.Domain.Interfaces.Services;
 using Order.Domain.Models;
+using Order.Domain.Validations;
+using Order.Domain.Validations.Base;
 
 namespace Order.Domain.Services
 {
@@ -12,28 +14,58 @@ namespace Order.Domain.Services
         {
             _clientRepository = clientRepository;
         }
-        public Task CreateAsync(ClientModel client)
+
+        public async Task<Response> CreateAsync(ClientModel client)
         {
-            _clientRepository.CreateAsync(client);
+            var validation = new ClientValidation();
+            var validationResult = validation.Validate(client);
+
+            if(!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.Select(x => x.ErrorMessage);
+                return new Response(false, "Validation failed");
+            }
+
+            var existingClient = await _clientRepository.GetByIdAsync(client.Id);
+            if (existingClient != null)
+            {
+                return new Response(false, $"Client with this {client.Id} already exists");
+            }
+
+            await _clientRepository.CreateAsync(client);
+            return new Response(true, "Client created successfully");
+        }
+
+        public async Task<Response> DeleteAsync(string clientId)
+        {
+            var client = await _clientRepository.GetByIdAsync(clientId);
+
+            if (client == null)
+            {
+                return new Response(false, $"Client with the {clientId} not found");
+            }
+
+            await _clientRepository.DeleteAsync(clientId);
+            return new Response(true, "Client deleted successfully");
+        }
+
+        public async Task<Response<ClientModel>> GetByIdAsync(string clientId)
+        {
+            var client = await _clientRepository.GetByIdAsync(clientId);
+
+            if (client == null)
+            {
+                return new Response<ClientModel>(false, $"Client with {clientId} not found", client!);
+            }
+            return new Response<ClientModel>(true, "Client retrieved successfully", client);
+        }
+
+        public Task<Response<List<ClientModel>>> ListByFilterAsync(string? clientId = null, string? name = null)
+        {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(string clientId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ClientModel> GetByIdAsync(string clientId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<ClientModel>> ListByFilterAsync(string? clientId = null, string? name = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(ClientModel client)
+        public Task<Response> UpdateAsync(ClientModel client)
         {
             throw new NotImplementedException();
         }

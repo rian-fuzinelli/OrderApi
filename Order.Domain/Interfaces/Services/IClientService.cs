@@ -1,17 +1,18 @@
 ﻿using Order.Domain.Models;
+using Order.Domain.Validations.Base;
 
 namespace Order.Domain.Interfaces.Services
 {
     public interface IClientService
     {
-        Task CreateAsync(ClientModel client);
+        Task<Response> CreateAsync(ClientModel client);
 
-        Task UpdateAsync(ClientModel client);
+        Task<Response>UpdateAsync(ClientModel client);
 
-        Task DeleteAsync(string clientId);
+        Task<Response> DeleteAsync(string clientId);
 
-        Task<ClientModel> GetByIdAsync(string clientId);
+        Task<Response<ClientModel>> GetByIdAsync(string clientId);
 
-        Task<List<ClientModel>> ListByFilterAsync(string? clientId = null, string? name = null);
+        Task<Response<List<ClientModel>>> ListByFilterAsync(string? clientId = null, string? name = null);
     }
 }

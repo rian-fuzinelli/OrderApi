@@ -8,6 +8,8 @@ namespace Order.Domain.Interfaces.Repositories
 
         Task UpdateAsync(ClientModel client);
 
+        Task AddAsync(ClientModel client);
+
         Task DeleteAsync(string clientId);
 
         Task<bool> ExistsByIdAsync(string clientId);
