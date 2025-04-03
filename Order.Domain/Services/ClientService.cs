@@ -60,14 +60,28 @@ namespace Order.Domain.Services
             return new Response<ClientModel>(true, "Client retrieved successfully", client);
         }
 
-        public Task<Response<List<ClientModel>>> ListByFilterAsync(string? clientId = null, string? name = null)
+        public async Task<Response<List<ClientModel>>> ListByFilterAsync(string clientId, string name)
         {
-            throw new NotImplementedException();
+
+            var client = await _clientRepository.ListByFilterAsync(clientId, name);
+            if (client == null || client.Count == 0)
+            {
+                return new Response<List<ClientModel>>(false, "No clients found", []);
+            }
+            return new Response<List<ClientModel>>(true, "Clients retrieved successfully", client);
         }
 
-        public Task<Response> UpdateAsync(ClientModel client)
+        public async Task<Response> UpdateAsync(ClientModel client)
         {
-            throw new NotImplementedException();
+            var clientEntity = await _clientRepository.GetByIdAsync(client.Id);
+
+            if (clientEntity == null)
+            {
+                return new Response(false, $"Client with {client.Id} not found");
+            }
+
+            await _clientRepository.UpdateAsync(client);
+            return new Response(true, "Client updated successfully");
         }
     }
 }

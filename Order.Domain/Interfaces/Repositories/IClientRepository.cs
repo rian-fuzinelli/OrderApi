@@ -16,6 +16,6 @@ namespace Order.Domain.Interfaces.Repositories
 
         Task<ClientModel> GetByIdAsync(string clientId);
 
-        Task<List<ClientModel>> ListByFilterAsync(string clientId = null, string name = null);
+        Task<List<ClientModel>> ListByFilterAsync(string clientId, string? name);
     }
 }

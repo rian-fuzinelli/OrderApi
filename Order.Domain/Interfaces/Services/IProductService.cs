@@ -12,6 +12,6 @@ namespace Order.Domain.Interfaces.Services
 
         Task<ProductModel> GetByIdAsync(string product);
 
-        Task<List<ProductModel>> ListByFilterAsync(string? productId = null, string? description = null);
+        Task<List<ProductModel>> ListByFilterAsync(string? productId, string? description);
     }
 }

@@ -13,6 +13,6 @@ namespace Order.Domain.Interfaces.Services
 
         Task<ClientModel> GetByIdAsync(string userId);
 
-        Task<List<ClientModel>> ListByFilterAsync(string? userId = null, string? name = null);
+        Task<List<ClientModel>> ListByFilterAsync(string? userId, string? name);
     }
 }
